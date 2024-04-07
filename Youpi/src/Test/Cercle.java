@@ -1,11 +1,13 @@
-package Bureau;
+package Test;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.Serializable;
 
-public class Cercle {
+public class Cercle implements Serializable {
+	private static final long serialVersionUID = 1L;
 	public int x;
 	public int y;
 	public int r;
@@ -22,11 +24,11 @@ public class Cercle {
 			g2.setColor(Color.red);}
     	g2.drawOval( x-(r/2), y-(r/2), r, r);
     	paintComponent(g2);
-    	};
-    	
-    public void paintComponent(Graphics g){
-    	
-    	g.fillOval(x-(r/2), y-(r/2),r,r);}
+		};
+	
+		public void paintComponent(Graphics g){
+	
+			g.fillOval(x-(r/2), y-(r/2),r,r);}
     	
     	
     public Cercle (int x,int y,int r, int co) {
