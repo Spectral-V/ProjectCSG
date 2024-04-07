@@ -21,7 +21,12 @@ public class Cercle {
 		if (co==0) {
 			g2.setColor(Color.red);}
     	g2.drawOval( x-(r/2), y-(r/2), r, r);
+    	paintComponent(g2);
     	};
+    	
+    public void paintComponent(Graphics g){
+    	
+    	g.fillOval(x-(r/2), y-(r/2),r,r);}
     	
     	
     public Cercle (int x,int y,int r, int co) {
