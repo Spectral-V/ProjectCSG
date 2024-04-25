@@ -11,16 +11,19 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Demo extends JFrame{
 	private DrawingPanel drawingArea;
 	private String path = "circles.ser";
 	private ArrayList<Cercle> currentlist = new ArrayList<Cercle>();
+	private int wX = 100;
+	private int wY = 200;
 	
     public Demo(String path) {
     this.setpath(path);
     deserializeCercles();
-	setLocation(100,200);
+	setLocation(wX,wY);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	setSize(700,400);
     setTitle("Démo");
@@ -31,10 +34,12 @@ public class Demo extends JFrame{
 	JButton btn_1 = new JButton("S");
 	JButton btn_2 = new JButton("Move");
 	JButton btn_3 = new JButton("Open");
+	JButton btn_4 = new JButton("Save As");
 	toolBar.add(btn);
 	toolBar.add(btn_1);
 	toolBar.add(btn_2);
 	toolBar.add(btn_3);
+	toolBar.add(btn_4);
 	setJMenuBar(toolBar);
 	drawingArea.setBorder(BorderFactory.createLineBorder(Color.black));
 	add(toolBar, BorderLayout.NORTH);
@@ -45,7 +50,7 @@ public class Demo extends JFrame{
 	btn.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Test");
+            System.out.println("save");
             serializeCercles();
         }
     });
@@ -66,8 +71,16 @@ public class Demo extends JFrame{
 	btn_3.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Test");
+            System.out.println("open");
             deserializeout();
+            
+        }
+    });
+	btn_4.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("saveas");
+            saveAs();
             
         }
     });
@@ -194,14 +207,14 @@ public class Demo extends JFrame{
                     int result = fileChooser.showOpenDialog(frame);
                     if (result == JFileChooser.APPROVE_OPTION) {
                         File selectedFile = fileChooser.getSelectedFile();
-                        // Use the selectedFile for deserialization
+                       
                         System.out.println("Selected file: " + selectedFile.getAbsolutePath());
                      
                         frame.dispose();
                         
                             
 
-                        openNewWindow(selectedFile.getAbsolutePath()); // Open the new window with the deserialized circles
+                        openNewWindow(selectedFile.getAbsolutePath()); 
                         
                         
                     }
@@ -213,9 +226,36 @@ public class Demo extends JFrame{
         });
     }
     private void openNewWindow(String path) {
-        Demo newdemo = new Demo(path);
-        // Set the loaded circles
+        wX = wX + 30;
+        wY = wY + 30;
+    	Demo newdemo = new Demo(path);
+    	newdemo.setLocation(wX,wY);
         newdemo.setVisible(true);
+    }
+    private void saveAs() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save As");
+        
+        
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Serialized Files (*.ser)", "ser"); 
+        fileChooser.setFileFilter(filter);
+
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();             
+            
+            try {
+                FileOutputStream fileOut = new FileOutputStream(filePath);
+                ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+                objectOut.writeObject(drawingArea.getcs());
+                objectOut.close();
+                fileOut.close();
+                System.out.println("La liste de cercles a été sérialisée avec succès.");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
    
 }
