@@ -342,7 +342,7 @@ public class Demo extends JFrame{
 					cst.add(ce);
 				}
 			}
-
+			this.drawingArea.index -=1;
 			this.drawingArea.setcs(cst);
 			this.drawingArea.repaint();
         }

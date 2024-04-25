@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 
 
 public class DrawingPanel extends JPanel {
+	int index = -1;
 	int startX;
 	int startY;
 	private Demo currentdemo;
@@ -37,7 +38,12 @@ public class DrawingPanel extends JPanel {
 	            public void mousePressed(MouseEvent e) {
 	                startX = e.getX();
 	                startY = e.getY();
+	                
+	                if (state ==0) {
+	                	index += 1;
+	                }
 	            }
+	            
 	        });
 
 	        addMouseMotionListener((MouseMotionListener) new MouseMotionAdapter() {
@@ -45,17 +51,24 @@ public class DrawingPanel extends JPanel {
 	                
 	                if (state == 0) {
 	                if (state2==0) {
+	                	
 						Cercle c=new Cercle(startX,startY,(int) Math.sqrt(Math.pow(e.getX() - startX, 2) + Math.pow(e.getY() - startY, 2)),0);
 						ArrayList<Cercle> cst = new ArrayList<Cercle>();
 						cst.add(c);
-						
+						//System.out.println(cst.toString());
 						repaint();
 						for (Cercle ce:cst) {
 							if (((ce.x==c.x) && (ce.y==c.y))&&(ce.r<c.r)){
-							cst.remove(ce);
+								System.out.println("Marche");
+							cs.remove(ce);
 							}
 						}
-						cs=cst;
+						System.out.println("cs:");
+						System.out.println(cs.toString());
+						cs.addAll(cst);
+						if (cs.size()>index+1) {
+							cs.remove(index);
+						}
 						repaint();
 						}
 					if (state2==1) {
