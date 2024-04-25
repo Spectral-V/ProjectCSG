@@ -23,13 +23,13 @@ import javax.swing.JPanel;
 public class DrawingPanel extends JPanel {
 	int startX;
 	int startY;
-	 
-	ArrayList<Cercle> cs;
+	private Demo currentdemo;
+	private ArrayList<Cercle> cs;
 	private int state = 0;
 	private int state2 = 0;
-	public DrawingPanel() {
-		 cs = new ArrayList<>(); 
-	     deserializeCercles();
+	public DrawingPanel(Demo d) {
+		 cs = new ArrayList<Cercle>(); 
+	     cs = d.getcurrentlist();
 	     addMouseListener((MouseListener) new MouseAdapter() {
 	            public void mousePressed(MouseEvent e) {
 	                startX = e.getX();
@@ -138,7 +138,9 @@ public class DrawingPanel extends JPanel {
 		
 	}
 	
-	 public void paint (Graphics g) {
+	 
+
+	public void paint (Graphics g) {
 
 		// Create off-screen buffer
 	        Image offScreenBuffer = createImage(getWidth(), getHeight());
@@ -159,8 +161,11 @@ public class DrawingPanel extends JPanel {
 	   
 	  public ArrayList<Cercle> getcs() {
 		return cs;
+	  };
+	public  void setcs(ArrayList<Cercle> cs) {
+				this.cs = cs;
 		   };
-		   public void setstate(int i) {
+		public void setstate(int i) {
 				this.state = i;
 				   };
 		public void setstate2(int i) {
@@ -171,29 +176,12 @@ public class DrawingPanel extends JPanel {
 					   };
 		public int getstate2() {
 			return this.state2;
-					};
-	    	private void serializeCercles() {
-	            try {
-	                FileOutputStream fileOut = new FileOutputStream("circles.ser");
-	                ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-	                objectOut.writeObject(cs);
-	                objectOut.close();
-	                fileOut.close();
-	                System.out.println("La liste de cercles a été sérialisée avec succès.");
-	            } catch (IOException ex) {
-	                ex.printStackTrace();
-	            }
-	        }
-	        private void deserializeCercles() {
-	            try {
-	                FileInputStream fileIn = new FileInputStream("circles.ser");
-	                ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-	                cs = (ArrayList<Cercle>) objectIn.readObject();
-	                objectIn.close();
-	                fileIn.close();
-	                System.out.println("La liste de cercles a été désérialisée avec succès.");
-	            } catch (IOException | ClassNotFoundException ex) {
-	                ex.printStackTrace();
-	            }
-	        }
+					}
+	public void setcurrentdemo(Demo d) {
+			this.currentdemo = d;
+			   };
+
+
+	    	
+	        
 }
