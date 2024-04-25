@@ -1,4 +1,5 @@
 package Test;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
@@ -27,9 +28,11 @@ public class DrawingPanel extends JPanel {
 	private ArrayList<Cercle> cs;
 	private int state = 0;
 	private int state2 = 0;
+	private int supstate = 0;
 	public DrawingPanel(Demo d) {
 		 cs = new ArrayList<Cercle>(); 
 	     cs = d.getcurrentlist();
+	     this.setcurrentdemo(d);
 	     addMouseListener((MouseListener) new MouseAdapter() {
 	            public void mousePressed(MouseEvent e) {
 	                startX = e.getX();
@@ -40,18 +43,19 @@ public class DrawingPanel extends JPanel {
 	        addMouseMotionListener((MouseMotionListener) new MouseMotionAdapter() {
 	            public void mouseDragged(MouseEvent e) {
 	                
-	                
+	                if (state == 0) {
 	                if (state2==0) {
 						Cercle c=new Cercle(startX,startY,(int) Math.sqrt(Math.pow(e.getX() - startX, 2) + Math.pow(e.getY() - startY, 2)),0);
-						cs.add(c);
+						ArrayList<Cercle> cst = new ArrayList<Cercle>();
+						cst.add(c);
 						
 						repaint();
-						for (Cercle ce:cs) {
+						for (Cercle ce:cst) {
 							if (((ce.x==c.x) && (ce.y==c.y))&&(ce.r<c.r)){
-							cs.remove(ce);
+							cst.remove(ce);
 							}
-						
 						}
+						cs=cst;
 						repaint();
 						}
 					if (state2==1) {
@@ -67,28 +71,19 @@ public class DrawingPanel extends JPanel {
 	                repaint();
 					}
 	            }
+	            }
 	        });
 		addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				/*if (state==0) {
-					Cercle c=new Cercle(e.getX(),e.getY(),50,0);
-					cs.add(c);
-					repaint();
-					}
+				System.out.println("Click");
 				if (state==1) {
-					for (Cercle c:cs) {
-						if (c.containt(e.getX(),e.getY() )) {
-							Cercle nc=new Cercle(c.x,c.y,c.r,(c.co+1)%2);
-							cs.add(nc);
-							repaint();
-							
-						}
-					}
+					selectCircle(e.getX(), e.getY());
+
+					
 				}
-				*/
 			}
 
 			@Override
@@ -152,7 +147,15 @@ public class DrawingPanel extends JPanel {
 	        
 	        // Draw circles on the off-screen buffer
 	        for (Cercle c : cs) {
-	            c.paint(offScreenGraphics);
+	        	if (c.getCo() == 0) {
+	        		offScreenGraphics.setColor(Color.RED); // Couleur par défaut
+	        		c.paint(offScreenGraphics);
+	            }
+	            if (c.getCo() == 1){
+	            	offScreenGraphics.setColor(Color.GREEN); // Couleur de sélection
+	            	c.paint(offScreenGraphics);
+	            }
+	        
 	        }
 	        
 	        // Render the off-screen buffer on the screen
@@ -162,26 +165,65 @@ public class DrawingPanel extends JPanel {
 	  public ArrayList<Cercle> getcs() {
 		return cs;
 	  };
-	public  void setcs(ArrayList<Cercle> cs) {
-				this.cs = cs;
+	public void setcs(ArrayList<Cercle> cs) {
+			this.cs = cs;
 		   };
-		public void setstate(int i) {
-				this.state = i;
-				   };
-		public void setstate2(int i) {
-				this.state2 = i;
+	public void setstate(int i) {
+			this.state = i;
 				};
-		public int getstate() {
-					return this.state;
-					   };
-		public int getstate2() {
+	public void setstate2(int i) {
+			this.state2 = i;
+				};
+	public int getstate() {
+			return this.state;
+				};
+	public int getstate2() {
 			return this.state2;
-					}
+				}
+	public int getSupstate() {
+		return supstate;
+	}
+	public void setSupstate(int supstate) {
+		this.supstate = supstate;
+	}
+
 	public void setcurrentdemo(Demo d) {
 			this.currentdemo = d;
 			   };
-
-
-	    	
-	        
+	public Demo getcurrentdemo() {
+			return this.currentdemo;
+	};
+		
+	private void selectCircle(int x, int y) {
+			for (Cercle c : cs) {
+			     if (c.containt(x, y)) {
+			            	if(supstate == 0) {
+			            		Cercle ct = c;
+			            		cs.remove(c);
+			            		ct.setCo(1);
+			            		cs.add(ct);
+			            		currentdemo.showCircleDescription(c); 
+			            		repaint();
+			                
+			            		break;
+			            }
+			            	if(supstate == 1) {
+				    	 		Cercle ct = c;
+				            	cs.remove(c);
+				            	ct.setCo(1);
+				            	cs.add(ct);
+				            	repaint();
+				            	currentdemo.Delete(c); 
+				            	this.setstate(0);
+				                this.setSupstate(0); 
+				            	break;
+				            
+				             
+				           
+				        }
+			        }
+				}
+			
+			}
+        
 }

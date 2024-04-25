@@ -1,0 +1,8 @@
+25/04 :
+- Sauvegarde marche
+- ajout de la sauvegarde sous
+- possibilité d'ouvrir un nouveau fichier
+26/04 :
+- Plus d'erreur dans la console quand on crée un cercle
+- test pour les description (on peut avoir la description d'un cercle)
+- Ajout de la suppression d'un cercle 

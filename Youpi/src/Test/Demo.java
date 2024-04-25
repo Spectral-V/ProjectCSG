@@ -31,15 +31,17 @@ public class Demo extends JFrame{
     JMenuBar toolBar = new JMenuBar();
     
 	JButton btn = new JButton("Save");
-	JButton btn_1 = new JButton("S");
+	JButton btn_1 = new JButton("Desc");
 	JButton btn_2 = new JButton("Move");
 	JButton btn_3 = new JButton("Open");
 	JButton btn_4 = new JButton("Save As");
+	JButton btn_5 = new JButton("Supr");
 	toolBar.add(btn);
 	toolBar.add(btn_1);
 	toolBar.add(btn_2);
 	toolBar.add(btn_3);
 	toolBar.add(btn_4);
+	toolBar.add(btn_5);
 	setJMenuBar(toolBar);
 	drawingArea.setBorder(BorderFactory.createLineBorder(Color.black));
 	add(toolBar, BorderLayout.NORTH);
@@ -57,7 +59,7 @@ public class Demo extends JFrame{
 	btn_1.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Test");
+            System.out.println("Select");
             drawingArea.setstate((drawingArea.getstate()+1)%2);
         }
     });
@@ -81,6 +83,15 @@ public class Demo extends JFrame{
         public void actionPerformed(ActionEvent e) {
             System.out.println("saveas");
             saveAs();
+            
+        }
+    });
+	btn_5.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        	System.out.println("Delete");
+        	drawingArea.setstate((drawingArea.getstate()+1)%2);
+            drawingArea.setSupstate((drawingArea.getSupstate()+1)%2);
             
         }
     });
@@ -255,6 +266,85 @@ public class Demo extends JFrame{
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+    public void showCircleDescription(Cercle c) {
+        Demo d = this;
+    	JFrame descriptionFrame = new JFrame("Description du Cercle");
+        descriptionFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        descriptionFrame.setSize(300, 200);
+
+        JLabel descriptionLabel = new JLabel("Cercle sélectionné : " + c.toString());
+        descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        descriptionFrame.add(descriptionLabel);
+        descriptionFrame.setVisible(true);
+        descriptionFrame.addWindowListener(new WindowListener() {
+   
+    		@Override
+    		public void windowOpened(WindowEvent e) {
+    			// TODO Auto-generated method stub
+    			
+    		}
+
+    		@Override
+    		public void windowClosing(WindowEvent e) {
+    			Cercle ct = c;
+    			ct.setCo(0);
+    			ArrayList<Cercle> cs = d.drawingArea.getcs();
+    			cs.remove(c);
+    			cs.add(ct);
+    			d.drawingArea.setcs(cs);
+    			d.drawingArea.repaint();
+    		}
+
+    		@Override
+    		public void windowClosed(WindowEvent e) {
+    			
+    		}
+
+    		@Override
+    		public void windowIconified(WindowEvent e) {
+    			// TODO Auto-generated method stub
+    			
+    		}
+
+    		@Override
+    		public void windowDeiconified(WindowEvent e) {
+    			// TODO Auto-generated method stub
+    			
+    		}
+
+    		@Override
+    		public void windowActivated(WindowEvent e) {
+    			// TODO Auto-generated method stub
+    			
+    		}
+
+    		@Override
+    		public void windowDeactivated(WindowEvent e) {
+    			// TODO Auto-generated method stub
+    			
+    		}
+    	});
+    }
+    public void Delete(Cercle c) {
+        int choice = JOptionPane.showConfirmDialog(this, "Voulez-vous vraiment supprimer ce cercle?", "Supprimer cercle", JOptionPane.OK_CANCEL_OPTION);
+        
+        if (choice == JOptionPane.OK_OPTION) {
+			ArrayList<Cercle> cs = this.drawingArea.getcs();
+			ArrayList<Cercle> cst = new ArrayList<Cercle>();
+			for (Cercle ce:cs) {
+				if (((ce.x==c.x) && (ce.y==c.y))&&(ce.r==c.r)){
+				System.out.println("Trouvé");
+				}
+				else {
+					cst.add(ce);
+				}
+			}
+
+			this.drawingArea.setcs(cst);
+			this.drawingArea.repaint();
         }
     }
    
