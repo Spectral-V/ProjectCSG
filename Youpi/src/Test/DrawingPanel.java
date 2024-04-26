@@ -9,11 +9,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -22,6 +17,7 @@ import javax.swing.JPanel;
 
 
 public class DrawingPanel extends JPanel {
+	private static final long serialVersionUID = 770683246678913545L;
 	int index = -1;
 	int startX;
 	int startY;
@@ -39,7 +35,7 @@ public class DrawingPanel extends JPanel {
 	                startX = e.getX();
 	                startY = e.getY();
 	                
-	                if (state ==0) {
+	                if (state ==0 && state2 ==0) {
 	                	index += 1;
 	                }
 	            }
@@ -58,7 +54,7 @@ public class DrawingPanel extends JPanel {
 						//System.out.println(cst.toString());
 						repaint();
 						for (Cercle ce:cst) {
-							if (((ce.x==c.x) && (ce.y==c.y))&&(ce.r<c.r)){
+							if (((ce.getX()==c.getX()) && (ce.getY()==c.getY()))&&(ce.getR()<c.getR())){
 								System.out.println("Marche");
 							cs.remove(ce);
 							}
@@ -74,12 +70,12 @@ public class DrawingPanel extends JPanel {
 					if (state2==1) {
 						for (Cercle c:cs) {
 							if (c.containt(startX,startY )) {
-								c.x = e.getX();
-			                    c.y = e.getY();
+								c.setX(e.getX());
+			                    c.setY(e.getY());
 								repaint();	
-								
-								
 							}
+							System.out.println("cs:");
+							System.out.println(cs.toString());
 						}
 	                repaint();
 					}
@@ -186,6 +182,11 @@ public class DrawingPanel extends JPanel {
 				};
 	public void setstate2(int i) {
 			this.state2 = i;
+				};
+	public void setAllstate(int i) {
+			this.state = i;
+			this.state2 = i;
+			this.supstate = i;
 				};
 	public int getstate() {
 			return this.state;

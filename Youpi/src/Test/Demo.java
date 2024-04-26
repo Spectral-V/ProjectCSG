@@ -14,7 +14,9 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Demo extends JFrame{
+	private static final long serialVersionUID = -2654866035346769096L;
 	private DrawingPanel drawingArea;
+	private JLabel Modelabel;
 	private String path = "circles.ser";
 	private ArrayList<Cercle> currentlist = new ArrayList<Cercle>();
 	private int wX = 100;
@@ -29,13 +31,14 @@ public class Demo extends JFrame{
     setTitle("Démo");
     this.drawingArea = new DrawingPanel(this);
     JMenuBar toolBar = new JMenuBar();
-    
+    JButton btn_0 = new JButton("Cercle");
 	JButton btn = new JButton("Save");
 	JButton btn_1 = new JButton("Desc");
 	JButton btn_2 = new JButton("Move");
 	JButton btn_3 = new JButton("Open");
 	JButton btn_4 = new JButton("Save As");
 	JButton btn_5 = new JButton("Supr");
+	toolBar.add(btn_0);
 	toolBar.add(btn);
 	toolBar.add(btn_1);
 	toolBar.add(btn_2);
@@ -43,11 +46,22 @@ public class Demo extends JFrame{
 	toolBar.add(btn_4);
 	toolBar.add(btn_5);
 	setJMenuBar(toolBar);
+	this.Modelabel = new JLabel("Mode: Paint");
+	this.Modelabel.setFont(new Font("SansSerif", Font.BOLD, 10));
+    
 	drawingArea.setBorder(BorderFactory.createLineBorder(Color.black));
 	add(toolBar, BorderLayout.NORTH);
+	add(Modelabel, BorderLayout.AFTER_LAST_LINE);
 	add(drawingArea, BorderLayout.CENTER);
 	
-	
+	btn_0.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("Paint");
+            Modelabel.setText("Mode: Paint");
+            drawingArea.setAllstate(0);
+        }
+    });
    
 	btn.addActionListener(new ActionListener() {
         @Override
@@ -60,13 +74,15 @@ public class Demo extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("Select");
+            Modelabel.setText("Mode: Select");
             drawingArea.setstate((drawingArea.getstate()+1)%2);
         }
     });
 	btn_2.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Test");
+            System.out.println("Move");
+            Modelabel.setText("Mode: Move");
             drawingArea.setstate2((drawingArea.getstate2()+1)%2);
         }
     });
@@ -90,8 +106,12 @@ public class Demo extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
         	System.out.println("Delete");
+        	Modelabel.setText("Mode: Delete");
         	drawingArea.setstate((drawingArea.getstate()+1)%2);
             drawingArea.setSupstate((drawingArea.getSupstate()+1)%2);
+            if (drawingArea.getstate2()==1) {
+            	drawingArea.setstate2((drawingArea.getstate2()+1)%2);
+            }
             
         }
     });
@@ -192,7 +212,8 @@ public class Demo extends JFrame{
             ex.printStackTrace();
         }
     }
-    private void deserializeCercles() {
+    @SuppressWarnings("unchecked")
+	private void deserializeCercles() {
         try {
             FileInputStream fileIn = new FileInputStream(this.getpath());
             ObjectInputStream objectIn = new ObjectInputStream(fileIn);
@@ -335,7 +356,7 @@ public class Demo extends JFrame{
 			ArrayList<Cercle> cs = this.drawingArea.getcs();
 			ArrayList<Cercle> cst = new ArrayList<Cercle>();
 			for (Cercle ce:cs) {
-				if (((ce.x==c.x) && (ce.y==c.y))&&(ce.r==c.r)){
+				if (((ce.getX()==c.getX()) && (ce.getY()==c.getY()))&&(ce.getR()==c.getR())){
 				System.out.println("Trouvé");
 				}
 				else {
@@ -345,6 +366,7 @@ public class Demo extends JFrame{
 			this.drawingArea.index -=1;
 			this.drawingArea.setcs(cst);
 			this.drawingArea.repaint();
+			this.Modelabel.setText("Mode : Paint");
         }
     }
    
