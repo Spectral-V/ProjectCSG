@@ -1,4 +1,4 @@
-package Test;
+package pastequecsg;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class Demo extends JFrame{
+public class CSGwindows extends JFrame{
 	private static final long serialVersionUID = -2654866035346769096L;
 	private DrawingPanel drawingArea;
 	private JLabel Modelabel;
@@ -22,13 +22,13 @@ public class Demo extends JFrame{
 	private int wX = 100;
 	private int wY = 200;
 	
-    public Demo(String path) {
+    public CSGwindows(String path) {
     this.setpath(path);
     deserializeCercles();
 	setLocation(wX,wY);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	setSize(700,400);
-    setTitle("Démo");
+    setTitle("Pasteque CSG");
     this.drawingArea = new DrawingPanel(this);
     JMenuBar toolBar = new JMenuBar();
     JButton btn_0 = new JButton("Cercle");
@@ -260,7 +260,7 @@ public class Demo extends JFrame{
     private void openNewWindow(String path) {
         wX = wX + 30;
         wY = wY + 30;
-    	Demo newdemo = new Demo(path);
+    	CSGwindows newdemo = new CSGwindows(path);
     	newdemo.setLocation(wX,wY);
         newdemo.setVisible(true);
     }
@@ -290,7 +290,7 @@ public class Demo extends JFrame{
         }
     }
     public void showCircleDescription(Cercle c) {
-        Demo d = this;
+        CSGwindows d = this;
     	JFrame descriptionFrame = new JFrame("Description du Cercle");
         descriptionFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         descriptionFrame.setSize(300, 200);
@@ -317,6 +317,8 @@ public class Demo extends JFrame{
     			cs.add(ct);
     			d.drawingArea.setcs(cs);
     			d.drawingArea.repaint();
+    			d.drawingArea.setAllstate(0);
+    			d.Modelabel.setText("Mode : Paint");
     		}
 
     		@Override

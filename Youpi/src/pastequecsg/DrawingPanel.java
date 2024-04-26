@@ -1,4 +1,4 @@
-package Test;
+package pastequecsg;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -21,12 +21,12 @@ public class DrawingPanel extends JPanel {
 	int index = -1;
 	int startX;
 	int startY;
-	private Demo currentdemo;
+	private CSGwindows currentdemo;
 	private ArrayList<Cercle> cs;
 	private int state = 0;
 	private int state2 = 0;
 	private int supstate = 0;
-	public DrawingPanel(Demo d) {
+	public DrawingPanel(CSGwindows d) {
 		 cs = new ArrayList<Cercle>(); 
 	     cs = d.getcurrentlist();
 	     this.setcurrentdemo(d);
@@ -201,10 +201,10 @@ public class DrawingPanel extends JPanel {
 		this.supstate = supstate;
 	}
 
-	public void setcurrentdemo(Demo d) {
+	public void setcurrentdemo(CSGwindows d) {
 			this.currentdemo = d;
 			   };
-	public Demo getcurrentdemo() {
+	public CSGwindows getcurrentdemo() {
 			return this.currentdemo;
 	};
 		

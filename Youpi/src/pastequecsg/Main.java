@@ -1,4 +1,4 @@
-package Test;
+package pastequecsg;
 import javax.swing.*;
 
 public class Main extends JFrame {
@@ -6,7 +6,7 @@ public class Main extends JFrame {
 	public int state = 0;
 	
     public static void main(String[] args) {
-        Demo f = new Demo("circles.ser");
+        CSGwindows f = new CSGwindows("circles.ser");
         f.setVisible(true);
         
     }

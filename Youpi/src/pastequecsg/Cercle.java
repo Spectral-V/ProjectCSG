@@ -1,4 +1,4 @@
-package Test;
+package pastequecsg;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
