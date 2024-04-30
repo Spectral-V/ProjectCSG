@@ -16,6 +16,7 @@
 - Ajout de la suppression d'un cercle 
 - Clean code ( Demo est maintenant CSGwindow et le package est pastequecsg)
 30/04
+- Marre d'attendre le R
 - Rectangle
 - Inter de Rectangle
 - Plein de petit truc
