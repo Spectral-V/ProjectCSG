@@ -3,14 +3,13 @@ package pastequecsg;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.Serializable;
 
-public class Cercle implements Serializable {
+
+public class Cercle extends Shape {
 	private static final long serialVersionUID = 1L;
 	private int x;
 	private int y;
 	private int r;
-	private int co=0;
 	
 	public void paint(Graphics g){
     	

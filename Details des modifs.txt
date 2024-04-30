@@ -1,3 +1,11 @@
+#################################################
+# 	######    ###	 #####  #####		#
+#	#        #   #	   #   	  #		#
+# 	###	 #   #	   #      #		#
+# 	#        #####	   #      #		#
+# 	#     	 #   #	   #      #		#
+# 	#     	 #   #	 #####    #		#
+#################################################
 25/04 :
 - Sauvegarde marche
 - ajout de la sauvegarde sous
@@ -7,3 +15,24 @@
 - test pour les description (on peut avoir la description d'un cercle)
 - Ajout de la suppression d'un cercle 
 - Clean code ( Demo est maintenant CSGwindow et le package est pastequecsg)
+30/04
+- Rectangle
+- Inter de Rectangle
+- Plein de petit truc
+- 
+
+
+#################################################
+#  ###	  ###### ###    #####  #####	#####	#
+# #   #	  #     #   #	  #    ##  #	##	#
+# #   #   ###	#   #	  #    #####	####	#
+# #####	  #     #####	  #    ## ## 	##	#
+# #   #	  #     #   #	  #    ##  ##	##	#
+# #   #	  #     #   #	#####  ##  ##	####	#
+#################################################
+
+- Union
+-RMI
+-UML
+-Rapport
+-OCL

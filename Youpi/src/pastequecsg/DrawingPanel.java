@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -22,12 +23,15 @@ public class DrawingPanel extends JPanel {
 	int startX;
 	int startY;
 	private CSGwindows currentdemo;
-	private ArrayList<Cercle> cs;
+	private ArrayList<Shape> cs;
+	private ArrayList<Shape> SelectedS;
 	private int state = 0;
 	private int state2 = 0;
 	private int supstate = 0;
+	
 	public DrawingPanel(CSGwindows d) {
-		 cs = new ArrayList<Cercle>(); 
+		 cs = new ArrayList<>();
+		 SelectedS = new ArrayList<>();
 	     cs = d.getcurrentlist();
 	     this.setcurrentdemo(d);
 	     addMouseListener((MouseListener) new MouseAdapter() {
@@ -35,9 +39,10 @@ public class DrawingPanel extends JPanel {
 	                startX = e.getX();
 	                startY = e.getY();
 	                
-	                if (state ==0 && state2 ==0) {
+	                if ((state ==0 && state2 ==0) | (state ==2 && state2 ==0)) {
 	                	index += 1;
 	                }
+	           
 	            }
 	            
 	        });
@@ -68,7 +73,7 @@ public class DrawingPanel extends JPanel {
 						repaint();
 						}
 					if (state2==1) {
-						for (Cercle c:cs) {
+						for (Shape c:cs) {
 							if (c.containt(startX,startY )) {
 								c.setX(e.getX());
 			                    c.setY(e.getY());
@@ -80,6 +85,50 @@ public class DrawingPanel extends JPanel {
 	                repaint();
 					}
 	            }
+	                if (state == 2) {
+		                if (state2==0) {
+		                	int h=0;
+		                	int w = 0;
+		                	if (e.getX() < startX) {
+		                	    w = Math.abs(startX - e.getX());
+		                	}
+		                	else { w = Math.abs(e.getX() - startX);}
+		                	if (e.getY() < startY) {
+		                	    h = Math.abs(startY - e.getY());
+		                	}
+		                	else { h = Math.abs(e.getY() - startY);}
+							Rectangle r=new Rectangle(startX,startY,w , h, 0);
+							ArrayList<Rectangle> cst = new ArrayList<Rectangle>();
+							cst.add(r);
+							//System.out.println(cst.toString());
+							repaint();
+							for (Rectangle ce:cst) {
+								if (((ce.getX()==r.getX()) && (ce.getY()==r.getY()))&&(ce.getWidth()<r.getWidth())&&(ce.getHeight()<r.getHeight())){
+									System.out.println("Marche");
+								cs.remove(ce);
+								}
+							}
+							System.out.println("cs:");
+							System.out.println(cs.toString());
+							cs.addAll(cst);
+							if (cs.size()>index+1) {
+								cs.remove(index);
+							}
+							repaint();
+							}
+						if (state2==1) {
+							for (Shape c:cs) {
+								if (c.containt(startX,startY )) {
+									c.setX(e.getX());
+				                    c.setY(e.getY());
+									repaint();	
+								}
+								System.out.println("cs:");
+								System.out.println(cs.toString());
+							}
+		                repaint();
+						}
+		            }
 	            }
 	        });
 		addMouseListener(new MouseListener() {
@@ -155,7 +204,7 @@ public class DrawingPanel extends JPanel {
 	        offScreenGraphics.fillRect(0, 0, getWidth(), getHeight());
 	        
 	        // Draw circles on the off-screen buffer
-	        for (Cercle c : cs) {
+	        for (Shape c : cs) {
 	        	if (c.getCo() == 0) {
 	        		offScreenGraphics.setColor(Color.RED); // Couleur par défaut
 	        		c.paint(offScreenGraphics);
@@ -171,10 +220,10 @@ public class DrawingPanel extends JPanel {
 	        g.drawImage(offScreenBuffer, 0, 0, this);
 	    };
 	   
-	  public ArrayList<Cercle> getcs() {
+	  public ArrayList<Shape> getcs() {
 		return cs;
 	  };
-	public void setcs(ArrayList<Cercle> cs) {
+	public void setcs(ArrayList<Shape> cs) {
 			this.cs = cs;
 		   };
 	public void setstate(int i) {
@@ -209,10 +258,11 @@ public class DrawingPanel extends JPanel {
 	};
 		
 	private void selectCircle(int x, int y) {
-			for (Cercle c : cs) {
+		List<Shape> copyCs = new ArrayList<>(cs);
+		for (Shape c : copyCs) {
 			     if (c.containt(x, y)) {
 			            	if(supstate == 0) {
-			            		Cercle ct = c;
+			            		Shape ct = c;
 			            		cs.remove(c);
 			            		ct.setCo(1);
 			            		cs.add(ct);
@@ -222,7 +272,7 @@ public class DrawingPanel extends JPanel {
 			            		break;
 			            }
 			            	if(supstate == 1) {
-				    	 		Cercle ct = c;
+				    	 		Shape ct = c;
 				            	cs.remove(c);
 				            	ct.setCo(1);
 				            	cs.add(ct);
@@ -235,9 +285,42 @@ public class DrawingPanel extends JPanel {
 				             
 				           
 				        }
+			            	if(supstate == 2) {
+			            		Shape ct = c;
+				            	cs.remove(c);
+				            	ct.setCo(1);
+				            	cs.add(ct);
+				            	SelectedS.add(ct);
+				            	repaint();
+				            	System.out.println("cst:");
+			            		System.out.println(SelectedS.toString());
+				            	if (SelectedS.size() == 2) {
+				            	currentdemo.Intersection(SelectedS.get(0),SelectedS.get(1)); 
+				            	this.setstate(0);
+				                this.setSupstate(0); 
+				            	break;}
+				            
+				             
+				           
+				        }
 			        }
 				}
 			
 			}
+	public void Clean() {
+		cs.removeAll(cs);
+		System.out.println("cs:");
+		System.out.println(cs.toString());
+		this.index =-1;
+		repaint();
+		
+		}
+
+
+
+	public void setSelectedS(ArrayList<Shape> arrayList) {
+		this.SelectedS = arrayList;
+		
+	}
         
 }

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -18,15 +17,26 @@ public class CSGwindows extends JFrame{
 	private DrawingPanel drawingArea;
 	private JLabel Modelabel;
 	private String path = "circles.ser";
-	private ArrayList<Cercle> currentlist = new ArrayList<Cercle>();
+	private ArrayList<Shape> currentlist = new ArrayList<Shape>();
 	private int wX = 100;
 	private int wY = 200;
-	
+	private static int windowCount = 0;
+	private static void checkWindowCount() {
+	    if (windowCount == 1) {
+	        for (Frame frame : Frame.getFrames()) {
+	            if (frame instanceof JFrame) {
+	                ((JFrame) frame).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	            }
+	        }
+	    }
+	}
     public CSGwindows(String path) {
     this.setpath(path);
     deserializeCercles();
 	setLocation(wX,wY);
-    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    windowCount ++;
+	if(windowCount == 1) {setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);}
+	else {setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);}
 	setSize(700,400);
     setTitle("Pasteque CSG");
     this.drawingArea = new DrawingPanel(this);
@@ -38,13 +48,21 @@ public class CSGwindows extends JFrame{
 	JButton btn_3 = new JButton("Open");
 	JButton btn_4 = new JButton("Save As");
 	JButton btn_5 = new JButton("Supr");
+	JButton btn_6 = new JButton("Clean");
+	JButton btn_7 = new JButton("Rect");
+	JButton btn_8 = new JButton("Inter");
 	toolBar.add(btn_0);
+	toolBar.add(btn_7);
 	toolBar.add(btn);
 	toolBar.add(btn_1);
 	toolBar.add(btn_2);
 	toolBar.add(btn_3);
+	toolBar.add(btn_8);
 	toolBar.add(btn_4);
 	toolBar.add(btn_5);
+	toolBar.add(btn_6);
+	
+	
 	setJMenuBar(toolBar);
 	this.Modelabel = new JLabel("Mode: Paint");
 	this.Modelabel.setFont(new Font("SansSerif", Font.BOLD, 10));
@@ -60,6 +78,15 @@ public class CSGwindows extends JFrame{
             System.out.println("Paint");
             Modelabel.setText("Mode: Paint");
             drawingArea.setAllstate(0);
+        }
+    });
+	btn_7.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("Paint");
+            Modelabel.setText("Mode: Paint");
+            drawingArea.setAllstate(0);
+            drawingArea.setstate(2);
         }
     });
    
@@ -102,6 +129,17 @@ public class CSGwindows extends JFrame{
             
         }
     });
+	btn_8.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("Inter");
+            Modelabel.setText("Mode: Select");
+            drawingArea.setstate(1);
+            drawingArea.setSupstate(2);
+            drawingArea.setSelectedS(new ArrayList<>());
+            
+        }
+    });
 	btn_5.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -112,6 +150,14 @@ public class CSGwindows extends JFrame{
             if (drawingArea.getstate2()==1) {
             	drawingArea.setstate2((drawingArea.getstate2()+1)%2);
             }
+            
+        }
+    });
+	btn_6.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("clean");
+            drawingArea.Clean();
             
         }
     });
@@ -156,6 +202,8 @@ public class CSGwindows extends JFrame{
 		@Override
 		public void windowClosing(WindowEvent e) {
 			// TODO Auto-generated method stub
+			checkWindowCount();
+			windowCount --;
 		}
 
 		@Override
@@ -190,7 +238,7 @@ public class CSGwindows extends JFrame{
 
     
     }
-    public ArrayList<Cercle> getcurrentlist() {
+    public ArrayList<Shape> getcurrentlist() {
 		return currentlist;
 	  };
 	 
@@ -217,7 +265,7 @@ public class CSGwindows extends JFrame{
         try {
             FileInputStream fileIn = new FileInputStream(this.getpath());
             ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-            currentlist = (ArrayList<Cercle>) objectIn.readObject();
+            currentlist = (ArrayList<Shape>) objectIn.readObject();
             objectIn.close();
             fileIn.close();
             System.out.println("La liste de cercles a été désérialisée avec succès.");
@@ -260,9 +308,11 @@ public class CSGwindows extends JFrame{
     private void openNewWindow(String path) {
         wX = wX + 30;
         wY = wY + 30;
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     	CSGwindows newdemo = new CSGwindows(path);
     	newdemo.setLocation(wX,wY);
         newdemo.setVisible(true);
+        System.out.println(windowCount);
     }
     private void saveAs() {
         JFileChooser fileChooser = new JFileChooser();
@@ -289,7 +339,7 @@ public class CSGwindows extends JFrame{
             }
         }
     }
-    public void showCircleDescription(Cercle c) {
+    public void showCircleDescription(Shape c) {
         CSGwindows d = this;
     	JFrame descriptionFrame = new JFrame("Description du Cercle");
         descriptionFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -310,9 +360,9 @@ public class CSGwindows extends JFrame{
 
     		@Override
     		public void windowClosing(WindowEvent e) {
-    			Cercle ct = c;
+    			Shape ct = c;
     			ct.setCo(0);
-    			ArrayList<Cercle> cs = d.drawingArea.getcs();
+    			ArrayList<Shape> cs = d.drawingArea.getcs();
     			cs.remove(c);
     			cs.add(ct);
     			d.drawingArea.setcs(cs);
@@ -351,18 +401,28 @@ public class CSGwindows extends JFrame{
     		}
     	});
     }
-    public void Delete(Cercle c) {
+    public void Delete(Shape c) {
         int choice = JOptionPane.showConfirmDialog(this, "Voulez-vous vraiment supprimer ce cercle?", "Supprimer cercle", JOptionPane.OK_CANCEL_OPTION);
         
         if (choice == JOptionPane.OK_OPTION) {
-			ArrayList<Cercle> cs = this.drawingArea.getcs();
-			ArrayList<Cercle> cst = new ArrayList<Cercle>();
-			for (Cercle ce:cs) {
-				if (((ce.getX()==c.getX()) && (ce.getY()==c.getY()))&&(ce.getR()==c.getR())){
+			ArrayList<Shape> cs = this.drawingArea.getcs();
+			ArrayList<Shape> cst = new ArrayList<>();
+			for (Shape ce:cs) {
+				if(ce instanceof Cercle) {
+				if (((ce.getX()==c.getX()) && (ce.getY()==c.getY()))&&(((Cercle) ce).getR()==((Cercle) c).getR())){
 				System.out.println("Trouvé");
 				}
 				else {
 					cst.add(ce);
+				}
+				}
+				if(ce instanceof Rectangle) {
+				if (((ce.getX()==c.getX()) && (ce.getY()==c.getY()))&&(((Rectangle) ce).getWidth()==((Rectangle) c).getWidth())){
+				System.out.println("Trouvé");
+				}
+				else {
+					cst.add(ce);
+				}
 				}
 			}
 			this.drawingArea.index -=1;
@@ -371,6 +431,38 @@ public class CSGwindows extends JFrame{
 			this.Modelabel.setText("Mode : Paint");
         }
     }
+	public void Intersection(Shape shape, Shape shape2) {
+		ArrayList<Shape> cs = this.drawingArea.getcs();
+		int xIntersection = Math.max(shape.getX(), shape2.getX());
+		int yIntersection = Math.max(shape.getY(), shape2.getY());
+
+		int x2Right = Math.min(shape.getX() + ((Rectangle) shape).getWidth(), shape2.getX() + ((Rectangle) shape2).getWidth());
+		int y2Bottom = Math.min(shape.getY() + ((Rectangle) shape).getHeight(), shape2.getY() + ((Rectangle) shape2).getHeight());
+		if ( (x2Right - xIntersection > 0) && (y2Bottom - yIntersection > 0)) {
+		int intersectionWidth = Math.max(0, x2Right - xIntersection);
+		int intersectionHeight = Math.max(0, y2Bottom - yIntersection);
+
+		Rectangle intersectionRectangle = new Rectangle(xIntersection, yIntersection, intersectionWidth, intersectionHeight, 0);
+		cs.add(intersectionRectangle);
+		cs.remove(shape);
+		cs.remove(shape2);
+		
+		this.drawingArea.index -=1;
+		this.drawingArea.setcs(cs);
+		}
+		else {
+			cs.remove(shape);
+			cs.remove(shape2);
+			shape.setCo(0);
+			shape2.setCo(0);
+			cs.add(shape);
+			cs.add(shape2);
+			this.drawingArea.setcs(cs);
+		}
+		this.drawingArea.repaint();
+		this.Modelabel.setText("Mode : Paint");
+		
+	}
    
 }
 
