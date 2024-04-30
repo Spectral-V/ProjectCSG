@@ -38,4 +38,5 @@ abstract class Shape implements Serializable{
 		protected abstract void setX(int x);
 		protected abstract void setY(int x);
 
+
 }

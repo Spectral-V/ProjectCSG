@@ -40,7 +40,10 @@ public class CSGwindows extends JFrame{
 	setSize(700,400);
     setTitle("Pasteque CSG");
     this.drawingArea = new DrawingPanel(this);
-    JMenuBar toolBar = new JMenuBar();
+    JPanel toolBar = new JPanel();
+    toolBar.setLayout(new BoxLayout(toolBar, BoxLayout.Y_AXIS));
+    JPanel filepanel = new JPanel();
+    JPanel paintpanel = new JPanel();
     JButton btn_0 = new JButton("Cercle");
 	JButton btn = new JButton("Save");
 	JButton btn_1 = new JButton("Desc");
@@ -51,19 +54,20 @@ public class CSGwindows extends JFrame{
 	JButton btn_6 = new JButton("Clean");
 	JButton btn_7 = new JButton("Rect");
 	JButton btn_8 = new JButton("Inter");
-	toolBar.add(btn_0);
-	toolBar.add(btn_7);
-	toolBar.add(btn);
-	toolBar.add(btn_1);
-	toolBar.add(btn_2);
-	toolBar.add(btn_3);
-	toolBar.add(btn_8);
-	toolBar.add(btn_4);
-	toolBar.add(btn_5);
-	toolBar.add(btn_6);
+	paintpanel.add(btn_0);
+	paintpanel.add(btn_7);
+	filepanel.add(btn);
+	paintpanel.add(btn_1);
+	paintpanel.add(btn_2);
+	filepanel.add(btn_3);
+	paintpanel.add(btn_8);
+	filepanel.add(btn_4);
+	paintpanel.add(btn_5);
+	paintpanel.add(btn_6);
+	toolBar.add(filepanel,BorderLayout.LINE_START);
+	toolBar.add(paintpanel,BorderLayout.LINE_END);
 	
-	
-	setJMenuBar(toolBar);
+
 	this.Modelabel = new JLabel("Mode: Paint");
 	this.Modelabel.setFont(new Font("SansSerif", Font.BOLD, 10));
     
