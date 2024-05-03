@@ -9,6 +9,10 @@ abstract class Shape implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	protected int co=0;
+	protected int x;
+	protected int y;
+	protected int width;
+	protected int height;
 	public void paint(Graphics g){
 
 		};
@@ -25,18 +29,38 @@ abstract class Shape implements Serializable{
 		public boolean containt (int a, int b) {
 	    	return true;
 	    }
-
-		protected abstract int getX();
-
-
-
-		public int getY() {
-			// TODO Auto-generated method stub
-			return 0;
+		public int getX() {
+			return x;
 		}
 
-		protected abstract void setX(int x);
-		protected abstract void setY(int x);
+		public void setX(int x) {
+			this.x = x;
+		}
+		public int getY() {
+			return y;
+		}
+
+		public void setY(int y) {
+			this.y = y;
+		}
+		public void setHeight(int height) {
+	    	this.height = height ;
+			
+		}
+
+		public void setWidth(int width) {
+			this.width = width;
+			
+		}
+		public int getHeight() {
+	    	return this.height;
+			
+		}
+
+		public int getWidth() {
+			return this.width;
+			
+		}
 
 
 }

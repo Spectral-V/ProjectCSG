@@ -7,9 +7,6 @@ import java.awt.Graphics2D;
 
 public class Cercle extends Shape {
 	private static final long serialVersionUID = 1L;
-	private int x;
-	private int y;
-	private int r;
 	
 	public void paint(Graphics g){
     	
@@ -17,27 +14,28 @@ public class Cercle extends Shape {
     	Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(5));
         
-    	g2.drawOval( x-(r/2), y-(r/2), r, r);
+    	g2.drawOval( x-(width/2), y-(height/2), width, height);
     	paintComponent(g2);
 		};
 	
 		public void paintComponent(Graphics g){
 	
-			g.fillOval(x-(r/2), y-(r/2),r,r);}
+			g.fillOval(x-(width/2), y-(height/2),width,height);}
     	
     	
     public Cercle (int x,int y,int r, int co) {
     	this.setX(x);
     	this.setY(y);
-    	this.setR(r);
+    	this.setWidth(r);
+    	this.setHeight(r);
     	this.setCo(co);
     	
     }
     public boolean containt (int a, int b) {
-    	return((a - x)*(a-x)+(b - y)*(b-y) < r*r);
+    	return((a - x)*(a-x)+(b - y)*(b-y) < width*height);
     }
     public String toString () {
-    	return("Cercle : x: " + this.x + " y: " + this.y + "r: " + this.r + ";");
+    	return("Cercle : x: " + this.x + " y: " + this.y + "r: " + this.width + ";");
     }
 
 	public int getCo() {
@@ -46,27 +44,6 @@ public class Cercle extends Shape {
 
 	public void setCo(int co) {
 		this.co = co;
-	}
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-	public int getR() {
-		return r;
-	}
-
-	public void setR(int r) {
-		this.r = r;
 	}
 	
 }

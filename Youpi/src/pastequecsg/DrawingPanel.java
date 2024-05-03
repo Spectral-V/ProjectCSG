@@ -59,7 +59,7 @@ public class DrawingPanel extends JPanel {
 						//System.out.println(cst.toString());
 						repaint();
 						for (Cercle ce:cst) {
-							if (((ce.getX()==c.getX()) && (ce.getY()==c.getY()))&&(ce.getR()<c.getR())){
+							if (((ce.getX()==c.getX()) && (ce.getY()==c.getY()))&&(ce.getWidth()<c.getWidth())){
 								System.out.println("Marche");
 							cs.remove(ce);
 							}
@@ -296,6 +296,24 @@ public class DrawingPanel extends JPanel {
 			            		System.out.println(SelectedS.toString());
 				            	if (SelectedS.size() == 2) {
 				            	currentdemo.Intersection(SelectedS.get(0),SelectedS.get(1)); 
+				            	this.setstate(0);
+				                this.setSupstate(0); 
+				            	break;}
+				            
+				             
+				           
+				        }
+			            	if(supstate == 3) {
+			            		Shape ct = c;
+				            	cs.remove(c);
+				            	ct.setCo(1);
+				            	cs.add(ct);
+				            	SelectedS.add(ct);
+				            	repaint();
+				            	System.out.println("cst:");
+			            		System.out.println(SelectedS.toString());
+				            	if (SelectedS.size() == 2) {
+				            	currentdemo.Union(SelectedS.get(0),SelectedS.get(1)); 
 				            	this.setstate(0);
 				                this.setSupstate(0); 
 				            	break;}

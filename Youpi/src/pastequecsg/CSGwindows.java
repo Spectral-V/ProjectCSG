@@ -54,6 +54,7 @@ public class CSGwindows extends JFrame{
 	JButton btn_6 = new JButton("Clean");
 	JButton btn_7 = new JButton("Rect");
 	JButton btn_8 = new JButton("Inter");
+	JButton btn_9 = new JButton("Union");
 	paintpanel.add(btn_0);
 	paintpanel.add(btn_7);
 	filepanel.add(btn);
@@ -61,6 +62,7 @@ public class CSGwindows extends JFrame{
 	paintpanel.add(btn_2);
 	filepanel.add(btn_3);
 	paintpanel.add(btn_8);
+	paintpanel.add(btn_9);
 	filepanel.add(btn_4);
 	paintpanel.add(btn_5);
 	paintpanel.add(btn_6);
@@ -144,6 +146,17 @@ public class CSGwindows extends JFrame{
             
         }
     });
+	btn_9.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("Union");
+            Modelabel.setText("Mode: Select");
+            drawingArea.setstate(1);
+            drawingArea.setSupstate(3);
+            drawingArea.setSelectedS(new ArrayList<>());
+            
+        }
+    });
 	btn_5.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -170,6 +183,7 @@ public class CSGwindows extends JFrame{
 		@Override
 		public void keyTyped(KeyEvent e) {
 			// TODO Auto-generated me
+			
 			if (e.getKeyChar() == 's') { 
 				System.out.println("s");
 			}
@@ -179,6 +193,7 @@ public class CSGwindows extends JFrame{
 		@Override
 		public void keyPressed(KeyEvent e) {
 			// TODO Auto-generated method stub
+			System.out.println(e.getKeyChar());
 			if (e.getKeyChar()=='q') { System.exit(0);}
 			if (e.getKeyChar()=='s') { 
 				System.out.println("s");
@@ -413,7 +428,7 @@ public class CSGwindows extends JFrame{
 			ArrayList<Shape> cst = new ArrayList<>();
 			for (Shape ce:cs) {
 				if(ce instanceof Cercle) {
-				if (((ce.getX()==c.getX()) && (ce.getY()==c.getY()))&&(((Cercle) ce).getR()==((Cercle) c).getR())){
+				if (((ce.getX()==c.getX()) && (ce.getY()==c.getY()))&&(((Cercle) ce).getWidth()==((Cercle) c).getWidth())){
 				System.out.println("Trouvé");
 				}
 				else {
@@ -463,6 +478,18 @@ public class CSGwindows extends JFrame{
 			cs.add(shape2);
 			this.drawingArea.setcs(cs);
 		}
+		this.drawingArea.repaint();
+		this.Modelabel.setText("Mode : Paint");
+		
+	}
+	public void Union(Shape shape, Shape shape2) {
+		ArrayList<Shape> cs = this.drawingArea.getcs();
+		Union u = new Union(shape,shape2);
+		cs.remove(shape);
+		cs.remove(shape2);
+		cs.add(u);
+		this.drawingArea.index -=1;
+		this.drawingArea.setcs(cs);
 		this.drawingArea.repaint();
 		this.Modelabel.setText("Mode : Paint");
 		
